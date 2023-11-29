@@ -26,7 +26,7 @@ random.shuffle(words)
 # Set up a PsychoPy window
 win = visual.Window(fullscr=True, color=(0, 0, 0))
 
-core.wait(2.5)
+core.wait(2.5) # Wait 2.5 seconds before starting
 
 # Main loop for displaying words and sending markers
 for word_info in words:
@@ -46,11 +46,12 @@ for word_info in words:
 
     # Send the index as a marker
     outlet.push_sample([word_info["index"]])
+    print(word_info["index"]) # Print the index to the console for debugging purposes
 
-    # Keep the word on screen for 5 seconds
+    # Keep the word on screen for 3 seconds
     core.wait(3)
 
-    # Show a blank screen for 5 seconds
+    # Show a blank screen for 6 seconds
     win.flip()
     core.wait(6)
 
