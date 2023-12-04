@@ -1,12 +1,12 @@
 {
     "words": [
-        {"index": 1, "word": "Affirmative"},
-        {"index": 2, "word": "Negative"},
-        {"index": 3, "word": "Take cover"},
-        {"index": 4, "word": "Rush"},
-        {"index": 5, "word": "Join me"},
-        {"index": 6, "word": "Assemble"},
-        {"index": 7, "word": "Disperse"},
-        {"index": 8, "word": "Halt"}
+        {"index": 1, "word": "Panther", "group" : "Noun", "sub-group" : "Animal"},
+        {"index": 2, "word": "Beetle", "group" : "Noun", "sub-group" : "Animal"},
+        {"index": 3, "word": "Concept", "group" : "Noun", "sub-group" : "Concept"},
+        {"index": 4, "word": "Object", "group" : "Noun", "sub-group" : "Concept"},
+        {"index": 5, "word": "Treat", "group" : "Verb", "sub-group" : "Active"},
+        {"index": 6, "word": "Express", "group" : "Verb", "sub-group" : "Active"},
+        {"index": 7, "word": "Chosen", "group" : "Verb", "sub-group" : "Passive"},
+        {"index": 8, "word": "Enjoyed", "group" : "Verb", "sub-group" : "Passive"}
     ]
 }
