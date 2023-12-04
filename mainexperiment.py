@@ -11,6 +11,8 @@ def get_keypress():
     else:
         return None
 
+iterations = 5 # Number of times to repeat the word list
+
 # Create a new LSL stream
 info = StreamInfo('WordMarkers', 'Markers', 1, 0, 'int32', 'wordstream')
 outlet = StreamOutlet(info)
@@ -23,37 +25,62 @@ with open('words.json', 'r') as file:
 # Randomize the order of the words
 random.shuffle(words)
 
+init_win = visual.Window(fullscr=False, color=(0, 0, 0), size=(800, 600))
+init_small_text = visual.TextStim(init_win, text="Set up LabRecorder, and press Enter to start.", color=(1, 1, 1))
+
+while True:
+    init_small_text.draw()
+    init_win.flip()
+
+    keypress = get_keypress()
+
+    if keypress == "return":
+        break
+    elif keypress == "escape":
+        exit()
+
 # Set up a PsychoPy window
 win = visual.Window(fullscr=True, color=(0, 0, 0))
 
-core.wait(2.5) # Wait 2.5 seconds before starting
+init_text = "Please focus on each word as it appears on the screen. Keep focused on it until you see the rest screen appear." 
+init_text.draw()
+win.flip()
+
+core.wait(3) # Wait 2.5 seconds before starting
 
 # Main loop for displaying words and sending markers
-for word_info in words:
-    # Check for keypresses
-    keypress = get_keypress()
+for i in range(iterations):
+    for word_info in words:
+        # Check for keypresses
+        keypress = get_keypress()
 
-    if keypress:
-        if keypress == "escape":
-            exit()
-        else:
-            continue
+        if keypress:
+            if keypress == "escape":
+                exit()
+            else:
+                continue
 
-    # Display the word
-    text = visual.TextStim(win, text=word_info["word"], color=(1, 1, 1))
-    text.draw()
-    win.flip()
+        # Display the word
+        text = visual.TextStim(win, text=word_info["word"], color=(1, 1, 1))
+        text.draw()
+        win.flip()
 
-    # Send the index as a marker
-    outlet.push_sample([word_info["index"]])
-    print(word_info["index"]) # Print the index to the console for debugging purposes
+        # Send the index as a marker
+        outlet.push_sample([word_info["index"]])
+        print(word_info["index"]) # Print the index to the console for debugging purposes
 
-    # Keep the word on screen for 3 seconds
-    core.wait(3)
+        # Keep the word on screen for 3 seconds
+        core.wait(3)
 
-    # Show a blank screen for 6 seconds
-    win.flip()
-    core.wait(6)
+        # Show a blank screen for 8 seconds
+        win.flip()
+        core.wait(8)
+
+        # Show a rest screen for 4 seconds
+        rest_text = visual.TextStim(win, text="Rest", color=(1, 1, 1))
+        rest_text.draw()
+        win.flip()
+        core.wait(4)
 
 # Close the window
 win.close()
