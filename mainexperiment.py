@@ -11,10 +11,10 @@ def get_keypress():
     else:
         return None
 
-iterations = 5 # Number of times to repeat the word list
+iterations = 1 # Number of times to repeat the word list
 
 # Create a new LSL stream
-info = StreamInfo('WordMarkers', 'Markers', 1, 0, 'int32', 'wordstream')
+info = StreamInfo('Trigger', 'Markers', 1, 0, 'int32', 'wordstream')
 outlet = StreamOutlet(info)
 
 # Load words from a JSON file
@@ -42,11 +42,11 @@ while True:
 # Set up a PsychoPy window
 win = visual.Window(fullscr=True, color=(0, 0, 0))
 
-init_text = "Please focus on each word as it appears on the screen. Keep focused on it until you see the rest screen appear." 
+init_text = visual.TextStim(win, text="Please focus on each word as it appears on the screen. Keep focused on it until you see the rest screen appear. When you see the word rest appear, feel free to think about whatever you want.", color=(1,1,1))
 init_text.draw()
 win.flip()
 
-core.wait(3) # Wait 2.5 seconds before starting
+core.wait(4) # Wait 4 seconds before starting
 
 # Main loop for displaying words and sending markers
 for i in range(iterations):
@@ -77,7 +77,7 @@ for i in range(iterations):
         core.wait(8)
 
         # Show a rest screen for 4 seconds
-        rest_text = visual.TextStim(win, text="Rest", color=(1, 1, 1))
+        rest_text = visual.TextStim(win, text="Rest", color=(245, 222, 179))
         rest_text.draw()
         win.flip()
         core.wait(4)
