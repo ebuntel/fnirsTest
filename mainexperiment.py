@@ -26,9 +26,6 @@ init_win = visual.Window(fullscr=False, color=(0, 0, 0), size=(800, 600))
 init_small_text = visual.TextStim(init_win, text="Set up LabRecorder, and press Enter to start.", color=(1, 1, 1))
 
 while True:
-    # Randomize the order of the words
-    random.shuffle(words)
-
     init_small_text.draw()
     init_win.flip()
 
@@ -50,6 +47,8 @@ core.wait(4) # Wait 4 seconds before starting
 
 # Main loop for displaying words and sending markers
 for i in range(iterations):
+    # Randomize the order of the words
+    random.shuffle(words)
     for word_info in words:
         # Check for keypresses
         keypress = get_keypress()
