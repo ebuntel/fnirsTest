@@ -11,7 +11,7 @@ def get_keypress():
     else:
         return None
 
-iterations = 1 # Number of times to repeat the word list
+iterations = 5 # Number of times to repeat the word list
 
 # Create a new LSL stream
 info = StreamInfo('Trigger', 'Markers', 1, 0, 'int32', 'wordstream')
