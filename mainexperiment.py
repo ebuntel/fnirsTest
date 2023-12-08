@@ -48,7 +48,8 @@ core.wait(4) # Wait 4 seconds before starting
 # Main loop for displaying words and sending markers
 for i in range(iterations):
     # Randomize the order of the words
-    random.shuffle(words)
+    words = random.shuffle(words)
+
     for word_info in words:
         # Check for keypresses
         keypress = get_keypress()
