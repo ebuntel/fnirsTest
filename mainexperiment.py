@@ -22,13 +22,13 @@ with open('words.json', 'r') as file:
     data = json.load(file)
     words = data["words"]
 
-# Randomize the order of the words
-random.shuffle(words)
-
 init_win = visual.Window(fullscr=False, color=(0, 0, 0), size=(800, 600))
 init_small_text = visual.TextStim(init_win, text="Set up LabRecorder, and press Enter to start.", color=(1, 1, 1))
 
 while True:
+    # Randomize the order of the words
+    random.shuffle(words)
+
     init_small_text.draw()
     init_win.flip()
 
