@@ -1,8 +1,10 @@
 import json
 import random
+import os
+
 from psychopy import visual, core, event
 from pylsl import StreamInfo, StreamOutlet
-
+from PIL import Image
 
 def get_keypress():
     keys = event.getKeys()
@@ -11,7 +13,15 @@ def get_keypress():
     else:
         return None
 
-iterations = 5 # Number of times to repeat the word list
+iterations = 2 # Number of times to repeat the word list
+
+# Image paths
+image_path = os.path.join(os.getcwd(), "images")
+image_path_arr = []
+for filename in os.listdir(image_path):
+    full_name = os.path.join(image_path, filename)
+    if os.path.isfile(full_name):
+        image_path_arr.append(full_name)
 
 # Create a new LSL stream
 info = StreamInfo('Trigger', 'Markers', 1, 0, 'int32', 'wordstream')
@@ -76,11 +86,11 @@ for i in range(iterations):
         win.flip()
         core.wait(8)
 
-        # Show a rest screen for 4 seconds
+        # Show a rest screen for 6 seconds
         rest_text = visual.TextStim(win, text="Rest", color=(245, 222, 179))
         rest_text.draw()
         win.flip()
-        core.wait(4)
+        core.wait(6)
 
 # Close the window
 win.close()

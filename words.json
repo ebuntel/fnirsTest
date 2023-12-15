@@ -1,12 +1,30 @@
 {
     "words": [
-        {"index": 1, "word": "Panther", "group" : "Noun", "sub-group" : "Animal"},
-        {"index": 2, "word": "Beetle", "group" : "Noun", "sub-group" : "Animal"},
-        {"index": 3, "word": "Concept", "group" : "Noun", "sub-group" : "Concept"},
-        {"index": 4, "word": "Object", "group" : "Noun", "sub-group" : "Concept"},
-        {"index": 5, "word": "Treat", "group" : "Verb", "sub-group" : "Active"},
-        {"index": 6, "word": "Express", "group" : "Verb", "sub-group" : "Active"},
-        {"index": 7, "word": "Chosen", "group" : "Verb", "sub-group" : "Passive"},
-        {"index": 8, "word": "Enjoyed", "group" : "Verb", "sub-group" : "Passive"}
+        {"index": 1, "word": "Alpha", "group" : "Nato-vowel", "sub-group" : "Thumbs-up"},
+        {"index": 2, "word": "Bravo", "group" : "Nato-consonant", "sub-group" : "Thumbs-up"},
+        {"index": 3, "word": "Charlie", "group" : "Nato-consonant", "sub-group" : "Thumbs-up"},
+        {"index": 4, "word": "Delta", "group" : "Nato-consonant", "sub-group" : "Thumbs-up"},
+        {"index": 5, "word": "Echo", "group" : "Nato-vowel", "sub-group" : "Thumbs-up"},
+        {"index": 6, "word": "Foxtrot", "group" : "Nato-consonant", "sub-group" : "Thumbs-down"},
+        {"index": 7, "word": "Golf", "group" : "Nato-consonant", "sub-group" : "Thumbs-down"},
+        {"index": 8, "word": "Hotel", "group" : "Nato-consonant", "sub-group" : "Thumbs-down"},
+        {"index": 9, "word": "India", "group" : "Nato-vowel", "sub-group" : "Thumbs-down"},
+        {"index": 10, "word": "Juliett", "group" : "Nato-consonant", "sub-group" : "Thumbs-down"},
+        {"index": 11, "word": "Kilo", "group" : "Nato-consonant", "sub-group" : "Hand-flat"},
+        {"index": 12, "word": "Lima", "group" : "Nato-consonant", "sub-group" : "Hand-flat"},
+        {"index": 13, "word": "Mike", "group" : "Nato-consonant", "sub-group" : "Hand-flat"},
+        {"index": 14, "word": "November", "group" : "Nato-consonant", "sub-group" : "Hand-flat"},
+        {"index": 15, "word": "Oscar", "group" : "Nato-vowel", "sub-group" : "Hand-flat"},
+        {"index": 16, "word": "Papa", "group" : "Nato-consonant", "sub-group" : "OK"},
+        {"index": 17, "word": "Quebec", "group" : "Nato-consonant", "sub-group" : "OK"},
+        {"index": 18, "word": "Romeo", "group" : "Nato-consonant", "sub-group" : "OK"},
+        {"index": 19, "word": "Sierra", "group" : "Nato-consonant", "sub-group" : "OK"},
+        {"index": 20, "word": "Tango", "group" : "Nato-consonant", "sub-group" : "OK"},
+        {"index": 21, "word": "Uniform", "group" : "Nato-vowel", "sub-group" : "Peace"},
+        {"index": 22, "word": "Victor", "group" : "Nato-consonant", "sub-group" : "Peace"},
+        {"index": 23, "word": "Whiskey", "group" : "Nato-consonant", "sub-group" : "Peace"},
+        {"index": 24, "word": "X-Ray", "group" : "Nato-consonant", "sub-group" : "Peace"},
+        {"index": 25, "word": "Yankee", "group" : "Nato-vowel", "sub-group" : "Peace"},
+        {"index": 26, "word": "Zulu", "group" : "Nato-consonant", "sub-group" : "None"}
     ]
 }
