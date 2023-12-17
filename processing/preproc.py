@@ -34,6 +34,11 @@ def main():
             snirf_list[file_index] = intensity_data
             file_index += 1
 
+            intensity_data.load_data()
+
+            intensity_data.annotations.set_durations(11)
+            segments = intensity_data.annotations.rename({"1" : "Panther", "2" : "Beetle", "3" : "Concept", "4" : "Object", "5" : "Treat", "6" : "Express", "7" : "Chosen", "8" : "Enjoyed"})
+
             fig = intensity_data.plot(n_channels=n_channels, duration=file_duration)
             fig.figure.savefig(os.path.join(to_preproc_path, file + ".png"))
         else:
