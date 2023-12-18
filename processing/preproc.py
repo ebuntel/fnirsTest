@@ -52,18 +52,18 @@ def main():
 
             # Save raw intensity data
             fig = intensity_data.plot(n_channels=n_channels, duration=file_duration)
-            fig.figure.savefig(os.path.join(to_preproc_path, file + ".png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + ".png"))
 
             # Convert to optical density
             #print(np.shape(intensity_data))
             noisy_snirf_od = mne.preprocessing.nirs.optical_density(intensity_data)
             fig = noisy_snirf_od.plot(n_channels=100, duration=file_duration, show_scrollbars=True)
-            fig.figure.savefig(os.path.join(to_preproc_path, file + "OpticalDensity.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "OpticalDensity.png"))
 
             # Use Temporal Derivative Distribution Repair (TDDR) to denoise the data
             denoised_snirf_od = mne.preprocessing.nirs.temporal_derivative_distribution_repair(noisy_snirf_od)
             fig = denoised_snirf_od.plot(n_channels=100, duration=file_duration, show_scrollbars=True)
-            fig.figure.savefig(os.path.join(to_preproc_path, file + "DenoisedOpticalDensity.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "DenoisedOpticalDensity.png"))
 
             # Check scalp coupling index
             # Scalp Coupling Index (SCI) is a measure of the quality of the optical contact between the optodes and the scalp.
@@ -71,7 +71,7 @@ def main():
             fig, ax = plt.subplots(layout="constrained")
             ax.hist(scalp_index)
             ax.set(xlabel="Scalp Coupling Index", ylabel="Count", xlim=[0, 1])
-            fig.figure.savefig(os.path.join(to_preproc_path, file + "ScalpCouplingIndex.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "ScalpCouplingIndex.png"))
 
             # Mark bad channels
             denoised_snirf_od.info['bads'] = list(compress(denoised_snirf_od.ch_names, scalp_index < 0.5))
@@ -79,13 +79,13 @@ def main():
             # Convert to haemoglobin using the beer lambert law
             haemo =  mne.preprocessing.nirs.beer_lambert_law(denoised_snirf_od, ppf=0.5)
             fig = haemo.plot(n_channels=100, duration=file_duration)
-            fig.figure.savefig(os.path.join(to_preproc_path, file + "UnfilteredHaemoglobin.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "UnfilteredHaemoglobin.png"))
 
             # Filter the haemoglobin data
             filtered_haemo = haemo.copy()
             filtered_haemo.filter(0.03, 0.8, h_trans_bandwidth=0.2, l_trans_bandwidth=0.02) # Band-pass filtering the data
             fig = filtered_haemo.plot(n_channels=100, duration=file_duration)
-            fig.figure.savefig(os.path.join(to_preproc_path, file + "FilteredHaemoglobin.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "FilteredHaemoglobin.png"))
 
             # Clean up data into epochs
             events, event_dict = mne.events_from_annotations(filtered_haemo)
@@ -101,7 +101,7 @@ def main():
             )
             epochs.drop_bad()
             fig = epochs.plot_drop_log()
-            fig.figure.savefig(os.path.join(to_preproc_path, file + "DropLog.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "DropLog.png"))
 
             # Print some info for log purposes
             print(np.shape(epochs.get_data()))
