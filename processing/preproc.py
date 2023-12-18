@@ -32,10 +32,10 @@ def main():
 
     file_index = 0
 
-    for file in os.listdir(to_preproc_path):
-        if(file.endswith(".snirf")):
-            # Read from snirf files
-            intensity_data = read_raw_snirf(os.path.join(to_preproc_path, file))
+    for direc in os.listdir(to_preproc_path):
+        if(os.path.isdir(os.path.join(to_preproc_path, direc))):
+            # Read from nirx data folder
+            intensity_data = read_raw_nirx(os.path.join(to_preproc_path, direc), verbose=True)
             snirf_list[file_index] = intensity_data
             file_index += 1
 
@@ -43,7 +43,14 @@ def main():
 
             # Fix annotations
             intensity_data.annotations.set_durations(11)
-            segments = intensity_data.annotations.rename({"1" : "Panther", "2" : "Beetle", "3" : "Concept", "4" : "Object", "5" : "Treat", "6" : "Express", "7" : "Chosen", "8" : "Enjoyed"})
+            print(intensity_data.annotations)
+            labels = intensity_data.annotations.to_data_frame() # Convert annotations to dataframe
+            print(labels)
+            segments = intensity_data.annotations.rename({'1.0' : "Panther", '2.0' : "Beetle", '3.0' : "Concept", '4.0' : "Object", '5.0' : "Treat", '6.0' : "Express", '7.0' : "Chosen", '8.0' : "Enjoyed"})
+
+            # Save labels
+            with open(os.path.join(to_preproc_path, direc, direc + "Labels.npy"), 'wb') as fileToWrite:
+                np.save(arr=np.array(labels), file=fileToWrite)
 
             # Check which channels are short-distance but don't (currently) remove them 
             channels = mne.pick_types(intensity_data.info, fnirs=True)
@@ -52,18 +59,18 @@ def main():
 
             # Save raw intensity data
             fig = intensity_data.plot(n_channels=n_channels, duration=file_duration)
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + ".png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + ".png"))
 
             # Convert to optical density
             #print(np.shape(intensity_data))
             noisy_snirf_od = mne.preprocessing.nirs.optical_density(intensity_data)
             fig = noisy_snirf_od.plot(n_channels=100, duration=file_duration, show_scrollbars=True)
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "OpticalDensity.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + "OpticalDensity.png"))
 
             # Use Temporal Derivative Distribution Repair (TDDR) to denoise the data
             denoised_snirf_od = mne.preprocessing.nirs.temporal_derivative_distribution_repair(noisy_snirf_od)
             fig = denoised_snirf_od.plot(n_channels=100, duration=file_duration, show_scrollbars=True)
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "DenoisedOpticalDensity.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + "DenoisedOpticalDensity.png"))
 
             # Check scalp coupling index
             # Scalp Coupling Index (SCI) is a measure of the quality of the optical contact between the optodes and the scalp.
@@ -71,21 +78,24 @@ def main():
             fig, ax = plt.subplots(layout="constrained")
             ax.hist(scalp_index)
             ax.set(xlabel="Scalp Coupling Index", ylabel="Count", xlim=[0, 1])
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "ScalpCouplingIndex.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + "ScalpCouplingIndex.png"))
 
             # Mark bad channels
             denoised_snirf_od.info['bads'] = list(compress(denoised_snirf_od.ch_names, scalp_index < 0.5))
 
+            # Interpolate bad channels
+            denoised_snirf_od.interpolate_bads(reset_bads=True, method = dict(fnirs = 'nearest'))
+
             # Convert to haemoglobin using the beer lambert law
             haemo =  mne.preprocessing.nirs.beer_lambert_law(denoised_snirf_od, ppf=0.5)
             fig = haemo.plot(n_channels=100, duration=file_duration)
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "UnfilteredHaemoglobin.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + "UnfilteredHaemoglobin.png"))
 
             # Filter the haemoglobin data
             filtered_haemo = haemo.copy()
             filtered_haemo.filter(0.03, 0.8, h_trans_bandwidth=0.2, l_trans_bandwidth=0.02) # Band-pass filtering the data
             fig = filtered_haemo.plot(n_channels=100, duration=file_duration)
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "FilteredHaemoglobin.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + "FilteredHaemoglobin.png"))
 
             # Clean up data into epochs
             events, event_dict = mne.events_from_annotations(filtered_haemo)
@@ -101,7 +111,7 @@ def main():
             )
             epochs.drop_bad()
             fig = epochs.plot_drop_log()
-            fig.figure.savefig(os.path.join(to_preproc_path, file[:-6] + "DropLog.png"))
+            fig.figure.savefig(os.path.join(to_preproc_path, direc, direc + "DropLog.png"))
 
             # Print some info for log purposes
             print(np.shape(epochs.get_data()))
@@ -112,7 +122,7 @@ def main():
             preprocessed_epochs = epochs.get_data(copy=True)
             print(np.shape(preprocessed_epochs))
 
-            with open(os.path.join(to_preproc_path, file[:-6] + "PreprocessedData.npy"), 'wb') as fil:
+            with open(os.path.join(to_preproc_path, direc, direc + "PreprocessedData.npy"), 'wb') as fil:
                 np.save(arr=preprocessed_epochs, file=fil)
         else:
             continue
