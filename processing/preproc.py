@@ -1,12 +1,14 @@
 import mne
 import os
+import snirf
 #import argparse
 
 import numpy as np
-import pysnirf2 as snirf
+#import pysnirf2 as snirf
 import matplotlib.pyplot as plt
 
 from mne.io import read_raw_snirf, read_raw_nirx
+from itertools import compress
 
 def main():
     n_channels = 100 # number of channels
@@ -53,7 +55,7 @@ def main():
             fig.figure.savefig(os.path.join(to_preproc_path, file + ".png"))
 
             # Convert to optical density
-            print(np.shape(intensity_data))
+            #print(np.shape(intensity_data))
             noisy_snirf_od = mne.preprocessing.nirs.optical_density(intensity_data)
             fig = noisy_snirf_od.plot(n_channels=100, duration=file_duration, show_scrollbars=True)
             fig.figure.savefig(os.path.join(to_preproc_path, file + "OpticalDensity.png"))
@@ -71,6 +73,9 @@ def main():
             ax.set(xlabel="Scalp Coupling Index", ylabel="Count", xlim=[0, 1])
             fig.figure.savefig(os.path.join(to_preproc_path, file + "ScalpCouplingIndex.png"))
 
+            # Mark bad channels
+            denoised_snirf_od.info['bads'] = list(compress(denoised_snirf_od.ch_names, scalp_index < 0.5))
+
             # Convert to haemoglobin using the beer lambert law
             haemo =  mne.preprocessing.nirs.beer_lambert_law(denoised_snirf_od, ppf=0.5)
             fig = haemo.plot(n_channels=100, duration=file_duration)
@@ -84,16 +89,15 @@ def main():
 
             # Clean up data into epochs
             events, event_dict = mne.events_from_annotations(filtered_haemo)
-            reject_criteria = dict(hbo=80e-6)
+            #reject_criteria = dict(hbo=80e-6)
 
             epochs = mne.Epochs(
                 filtered_haemo,
                 events, 
                 event_id=event_dict, 
                 tmin=0, tmax=stimulus_duration,
-                reject=reject_criteria,
                 reject_by_annotation=True, 
-                baseline=(-0.4, 0)
+                baseline=(0, 0)
             )
             epochs.drop_bad()
             fig = epochs.plot_drop_log()
@@ -108,7 +112,7 @@ def main():
             preprocessed_epochs = epochs.get_data(copy=True)
             print(np.shape(preprocessed_epochs))
 
-            with open(os.path.join(to_preproc_path, file + "PreprocessedData.npy"), 'wb') as fil:
+            with open(os.path.join(to_preproc_path, file[:-6] + "PreprocessedData.npy"), 'wb') as fil:
                 np.save(arr=preprocessed_epochs, file=fil)
         else:
             continue
