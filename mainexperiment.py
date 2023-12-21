@@ -2,18 +2,20 @@ import json
 import random
 import os
 
+import numpy as np
+
 from psychopy import visual, core, event
 from pylsl import StreamInfo, StreamOutlet
 from PIL import Image
 
 subgroup_dict = {
-    "Thumbs-up": 1,
-    "Thumbs-down": 2,
-    "Hand-flat": 3,
-    "OK": 4,
-    "Peace": 5,
-    "None": 6
+    1 : "Hand-flat",
+    2 : "OK",
+    3 : "thumbs-down",
+    4 : "thumbsup"
 }
+
+files_dict = {}
 
 def get_keypress():
     keys = event.getKeys()
@@ -22,17 +24,9 @@ def get_keypress():
     else:
         return None
 
-iterations = 1 # Number of times to repeat the word list
+iterations = 3 # Number of times to repeat the word list
 
 full_path = os.getcwd() #os.path.join(os.getcwd(), "fnirsTest")
-
-# Image paths
-image_path = os.path.join(full_path, "images")
-image_path_arr = []
-for filename in os.listdir(image_path):
-    full_name = os.path.join(image_path, filename)
-    if os.path.isfile(full_name):
-        image_path_arr.append(full_name)
 
 # Create a new LSL stream
 info = StreamInfo('Trigger', 'Markers', 1, 0, 'int32', 'wordstream')
@@ -65,7 +59,7 @@ init_text = visual.TextStim(win, text="Please focus on each word as it appears o
 init_text.draw()
 win.flip()
 
-core.wait(4) # Wait 4 seconds before starting
+core.wait(6) # Wait 6 seconds before starting
 
 # Main loop for displaying words and sending markers
 for i in range(iterations):
@@ -83,8 +77,9 @@ for i in range(iterations):
                 continue
 
         # Display the image 
-        if(word_info["sub-group"] != "None"):
-            img = visual.ImageStim(win, image=image_path_arr[subgroup_dict[word_info["sub-group"]] - 1], units="pix", size=(800, 600))
+        img_index = np.ceil(word_info["index"] / 2).astype(int)
+        img_path = os.path.join(full_path, "images", subgroup_dict[img_index] + ".jpg")
+        img = visual.ImageStim(win, image=img_path, units="pix", size=(800, 600))
 
         # Display the word
         text = visual.TextStim(win, text=word_info["word"], color=(0, 0, 0), pos=(0, 350), colorSpace='rgb255')
@@ -97,18 +92,14 @@ for i in range(iterations):
         outlet.push_sample([word_info["index"]])
         print(word_info["index"]) # Print the index to the console for debugging purposes
 
-        # Keep the word on screen for 3 seconds
-        core.wait(3)
+        # Keep the word on screen for 11 seconds
+        core.wait(11)
 
-        # Show a blank screen for 8 seconds
-        win.flip()
-        core.wait(8)
-
-        # Show a rest screen for 6 seconds
+        # Show a rest screen for 8 seconds
         rest_text = visual.TextStim(win, text="Rest", color=(245, 222, 179))
         rest_text.draw()
         win.flip()
-        core.wait(6)
+        core.wait(8)
 
 # Close the window
 win.close()

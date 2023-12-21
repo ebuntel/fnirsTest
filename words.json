@@ -1,12 +1,12 @@
 {
     "words": [
-        {"index": 1, "word": "Panther", "group" : "Noun", "sub-group" : "Animal"},
-        {"index": 2, "word": "Beetle", "group" : "Noun", "sub-group" : "Animal"},
-        {"index": 3, "word": "Concept", "group" : "Noun", "sub-group" : "Concept"},
-        {"index": 4, "word": "Object", "group" : "Noun", "sub-group" : "Concept"},
-        {"index": 5, "word": "Treat", "group" : "Verb", "sub-group" : "Active"},
-        {"index": 6, "word": "Express", "group" : "Verb", "sub-group" : "Active"},
-        {"index": 7, "word": "Chosen", "group" : "Verb", "sub-group" : "Passive"},
-        {"index": 8, "word": "Enjoyed", "group" : "Verb", "sub-group" : "Passive"}
+        {"index": 1, "word": "Panther", "group" : "Thing", "sub-group" : "Animal"},
+        {"index": 2, "word": "Beetle", "group" : "Thing", "sub-group" : "Animal"},
+        {"index": 3, "word": "Axe", "group" : "Thing", "sub-group" : "Tool"},
+        {"index": 4, "word": "Drill", "group" : "Thing", "sub-group" : "Tool"},
+        {"index": 5, "word": "Library", "group" : "Place", "sub-group" : "Building"},
+        {"index": 6, "word": "Hospital", "group" : "Place", "sub-group" : "Building"},
+        {"index": 7, "word": "Kitchen", "group" : "Place", "sub-group" : "Room"},
+        {"index": 8, "word": "Bedroom", "group" : "Place", "sub-group" : "Room"}
     ]
 }
