@@ -6,6 +6,15 @@ from psychopy import visual, core, event
 from pylsl import StreamInfo, StreamOutlet
 from PIL import Image
 
+subgroup_dict = {
+    "Thumbs-up": 1,
+    "Thumbs-down": 2,
+    "Hand-flat": 3,
+    "OK": 4,
+    "Peace": 5,
+    "None": 6
+}
+
 def get_keypress():
     keys = event.getKeys()
     if keys:
@@ -13,10 +22,12 @@ def get_keypress():
     else:
         return None
 
-iterations = 2 # Number of times to repeat the word list
+iterations = 1 # Number of times to repeat the word list
+
+full_path = os.getcwd() #os.path.join(os.getcwd(), "fnirsTest")
 
 # Image paths
-image_path = os.path.join(os.getcwd(), "images")
+image_path = os.path.join(full_path, "images")
 image_path_arr = []
 for filename in os.listdir(image_path):
     full_name = os.path.join(image_path, filename)
@@ -27,12 +38,13 @@ for filename in os.listdir(image_path):
 info = StreamInfo('Trigger', 'Markers', 1, 0, 'int32', 'wordstream')
 outlet = StreamOutlet(info)
 
+
 # Load words from a JSON file
-with open('words.json', 'r') as file:
+with open(os.path.join(full_path, "words.json"), 'r') as file:
     data = json.load(file)
     words = data["words"]
 
-init_win = visual.Window(fullscr=False, color=(0, 0, 0), size=(800, 600))
+init_win = visual.Window(fullscr=False, color=(0, 0, 0), size=(1200, 800))
 init_small_text = visual.TextStim(init_win, text="Set up LabRecorder, and press Enter to start.", color=(1, 1, 1))
 
 while True:
@@ -47,7 +59,7 @@ while True:
         exit()
 
 # Set up a PsychoPy window
-win = visual.Window(fullscr=True, color=(0, 0, 0))
+win = visual.Window(fullscr=False, color=(0, 0, 0), size = (1200, 800), screen=0, units='pix', allowGUI=True)
 
 init_text = visual.TextStim(win, text="Please focus on each word as it appears on the screen. Keep focused on it until you see the rest screen appear. When you see the word rest appear, feel free to think about whatever you want.", color=(1,1,1))
 init_text.draw()
@@ -70,8 +82,14 @@ for i in range(iterations):
             else:
                 continue
 
+        # Display the image 
+        if(word_info["sub-group"] != "None"):
+            img = visual.ImageStim(win, image=image_path_arr[subgroup_dict[word_info["sub-group"]] - 1], units="pix", size=(800, 600))
+
         # Display the word
-        text = visual.TextStim(win, text=word_info["word"], color=(1, 1, 1))
+        text = visual.TextStim(win, text=word_info["word"], color=(0, 0, 0), pos=(0, 350), colorSpace='rgb255')
+                
+        img.draw()
         text.draw()
         win.flip()
 
