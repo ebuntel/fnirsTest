@@ -18,15 +18,19 @@ def main():
     bandpass_upper_limit = 0.8 # Upper limit (in HZ) of frequencies allowed by the bandpass filter
     bandpass_lower_limit = 0.03 # Lower limit (in HZ) of frequencies allowed by the bandpass filter
 
-    #argParser = argparse.ArgumentParser()
-    #argParser.add_argument('input', help='Input file path to folder containing SNIRF file(s)')
-
-    #args = argParser.parse_args()
-
-    #print(args.input)
+    # Class names for reading from data file. 
+    # Currently set to classes used in NATO alphabet experiment
+    name_dict = {'1.0' : "Alpha", '2.0' : "Beta", '3.0' : "Charlie", '4.0' : "Delta", '5.0' : "Echo", '6.0' : "Foxtrot", '7.0' : "Golf", '8.0' : "Hotel", '9.0' : "India", '10.0' : "Juliet", 
+                 '11.0' : "Kilo", '12.0' : "Lima", '13.0' : "Mike", '14.0' : "November", '15.0' : "Oscar", '16.0' : "Papa", '17.0' : "Quebec", '18.0' : "Romeo", '19.0' : "Sierra", 
+                 '20.0' : "Tango", '21.0' : "Uniform", '22.0' : "Victor", '23.0' : "Whiskey", '24.0' : "X-Ray", '25.0' : "Yankee", '26.0' : "Zulu", '0.0' : "End"}
+    # Here is the other class name dictionary for the other experiment
+    # Initial experiment:
+    # name_dict = {'1.0' : "Panther", '2.0' : "Beetle", '3.0' : "Concept", '4.0' : "Object", '5.0' : "Treat", '6.0' : "Express", '7.0' : "Chosen", '8.0' : "Enjoyed"}
+    # New 8 words experiment:
+    # name_dict = {'1.0' : "Panther", '2.0' : "Beetle", '3.0' : "Drill", '4.0' : "Axe", '5.0' : "Library", '6.0' : "Hospital", '7.0' : "Kitchen", '8.0' : "Bedroom"}
 
     base_path = os.getcwd()
-    to_preproc_path = os.path.join(base_path, "data", "toPreProc")
+    to_preproc_path = os.path.join(base_path, "processing", "data", "toPreProc")
 
     snirf_list = {}
 
@@ -46,7 +50,7 @@ def main():
             print(intensity_data.annotations)
             labels = intensity_data.annotations.to_data_frame() # Convert annotations to dataframe
             print(labels)
-            segments = intensity_data.annotations.rename({'1.0' : "Panther", '2.0' : "Beetle", '3.0' : "Concept", '4.0' : "Object", '5.0' : "Treat", '6.0' : "Express", '7.0' : "Chosen", '8.0' : "Enjoyed"})
+            segments = intensity_data.annotations.rename(name_dict) # Rename annotations based on above annotation dictionary
 
             # Save labels
             with open(os.path.join(to_preproc_path, direc, direc + "Labels.npy"), 'wb') as fileToWrite:
