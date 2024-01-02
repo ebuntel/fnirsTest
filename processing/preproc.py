@@ -1,3 +1,9 @@
+'''
+BUGS:
+* Data files with mismatched gender/ age can cause errors in preprocessing. 
+* Data files with different annotation schemes / numbers of classes can cause errors. 
+'''
+
 import mne
 import os
 import snirf
